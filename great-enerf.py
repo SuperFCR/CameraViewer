@@ -45,24 +45,24 @@ if __name__ == '__main__':
     # gt_edge_color = rgb_to_normalized([242, 135, 5])
     # gt_edge_color = rgb_to_normalized([255, 187,111])
 
-    z_scale = 2
-    trans_scale = 1000 * 2
+    z_scale = 1.0
+    trans_scale = 5
 
-    dir_path = 'c2ws'
-    gt_poses_path = os.path.join(dir_path, 'gt_c2ws.pt')
-    our_poses_path = os.path.join(dir_path, 'ours_c2ws.pt')
-    compare_poses_path = os.path.join(dir_path, 'compare_c2ws.pt')
+    dir_path = 'greate-nerf'
+    gt_poses_path = os.path.join(dir_path, 'gt_camera_poses.pt')
+    our_poses_path = os.path.join(dir_path, 'ours_camera_poses.pt')
+    colmap_poses_path = os.path.join(dir_path, 'colmap_camera_poses.pt')
 
     gt_poses = load_poses(gt_poses_path)
     our_poses = load_poses(our_poses_path)
-    compare_poses = load_poses(compare_poses_path)
+    compare_poses = load_poses(colmap_poses_path)
     gt_poses[:,1,3] *= z_scale
     our_poses[:,1,3] *= z_scale
     compare_poses[:,1,3] *= z_scale
     # gt_poses: torch.Size([25, 4, 4]), our_poses: torch.Size([25, 4, 4]), compare_poses: torch.Size([25, 4, 4])
     
     # Initialize the visualizer with the axis limits for x, y, and z
-    visualizer = CameraPoseVisualizer([0, 120], [-50, 20], [-20 , 20])
+    visualizer = CameraPoseVisualizer([-50,50], [-50, 50], [-20 , 20])
 
 
 
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     # Add GT poses to the visualizer
     for pose in gt_poses:
         rotation, translation = decompose_pose(pose)
-        rotation, translation = swap_yz(rotation, translation)  # Swap Y and Z axes
+        # rotation, translation = swap_yz(rotation, translation)  # Swap Y and Z axes
         extrinsic_matrix = np.eye(4)
         extrinsic_matrix[:3, :3] = rotation
         extrinsic_matrix[:3, 3] = translation * trans_scale
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     if flag == 'our':
         for pose in our_poses:
             rotation, translation = decompose_pose(pose)
-            rotation, translation = swap_yz(rotation, translation)  # Swap Y and Z axes
+            # rotation, translation = swap_yz(rotation, translation)  # Swap Y and Z axes
             extrinsic_matrix = np.eye(4)
             extrinsic_matrix[:3, :3] = rotation
             extrinsic_matrix[:3, 3] = translation * trans_scale
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     elif flag == 'compare':
         for pose in compare_poses:
             rotation, translation = decompose_pose(pose)
-            rotation, translation = swap_yz(rotation, translation)  # Swap Y and Z axes
+            # rotation, translation = swap_yz(rotation, translation)  # Swap Y and Z axes
             extrinsic_matrix = np.eye(4)
             extrinsic_matrix[:3, :3] = rotation
             extrinsic_matrix[:3, 3] = translation * trans_scale

@@ -16,8 +16,23 @@ class CameraPoseVisualizer:
         self.ax.set_xlabel('x')
         self.ax.set_ylabel('y')
         self.ax.set_zlabel('z')
+        self.set_background_transparent()
         print('initialize camera pose visualizer')
 
+    def set_background_transparent(self):
+        # Set figure background color to be transparent
+        self.fig.patch.set_alpha(0.0)
+
+        # Set axes background color to be transparent
+        self.ax.patch.set_alpha(0.0)
+        
+        # Remove the pane color
+        self.ax.xaxis.pane.set_edgecolor('w')  # Set edge color to white for better visibility
+        self.ax.yaxis.pane.set_edgecolor('w')
+        self.ax.zaxis.pane.set_edgecolor('w')
+        self.ax.xaxis.pane.fill = False
+        self.ax.yaxis.pane.fill = False
+        self.ax.zaxis.pane.fill = False
 
     def extrinsic2pyramid(self, extrinsic, color='r', focal_len_scaled=3, aspect_ratio=0.3):
         vertex_std = np.array([[0, 0, 0, 1],
